@@ -5,7 +5,10 @@ import { motion } from "framer-motion";
 import { anonymizePrompt, classifyActivity } from "@/lib/anonymizer";
 import { getProducts } from "@/lib/test-data";
 import type { Product, AIEvent, GroupHierarchy } from "@/lib/types";
-import { v4 as uuidv4 } from "uuid";
+
+function generateId(): string {
+  return Math.random().toString(36).substring(2, 10);
+}
 
 interface DataInputProps {
   onAddEvent: (event: AIEvent) => void;
@@ -38,7 +41,7 @@ export default function DataInput({ onAddEvent, onBulkAdd }: DataInputProps) {
 
     const result = anonymizePrompt(prompt);
     const event: AIEvent = {
-      id: `evt-manual-${uuidv4().slice(0, 8)}`,
+      id: `evt-manual-${generateId().slice(0, 8)}`,
       timestamp: new Date().toISOString(),
       product,
       activityType: classifyActivity(prompt) as AIEvent["activityType"],
@@ -80,7 +83,7 @@ export default function DataInput({ onAddEvent, onBulkAdd }: DataInputProps) {
       const matchedGroup = GROUPS.find((g) => g.team.toLowerCase().includes((team || "").toLowerCase())) || GROUPS[0];
 
       return {
-        id: `evt-csv-${uuidv4().slice(0, 8)}`,
+        id: `evt-csv-${generateId().slice(0, 8)}`,
         timestamp: new Date().toISOString(),
         product: matchedProduct,
         activityType: classifyActivity(promptText || "") as AIEvent["activityType"],
